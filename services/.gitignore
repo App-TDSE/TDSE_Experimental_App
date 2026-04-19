@@ -1,0 +1,120 @@
+# Maven
+target/
+.mvn/
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+.flattened-pom.xml
+.m2/
+
+# IDE
+.idea/
+*.iml
+*.iws
+*.ipr
+.classpath
+.project
+.settings/
+*.swp
+*.swo
+*~
+.vscode/
+.DS_Store
+*.sublime-*
+
+# IDE - Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Gradle
+build/
+.gradle/
+
+# STS
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# Spring
+.spring/
+
+# General
+*.log
+*.log.*
+.env
+!.env.example
+.DS_Store
+Thumbs.db
+*.bak
+*.tmp
+*.temp
+
+# Docker
+docker-compose.override.yml
+.dockerignore
+
+# Node/Serverless
+node_modules/
+npm-debug.log
+.serverless/
+.serverless_plugins/
+
+# AWS
+.aws-sam/
+samconfig.toml
+
+# Coverage
+jacoco.xml
+coverage/
+.coverage
+htmlcov/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# OS specific
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+\#*\#
+.\#*
+
+# Build outputs
+out/
+bin/
+dist/
+
+# Serverless/Lambda
+.serverless/
+.serverless_plugins/
+.webpack/
+
+# Test coverage
+coverage/
+*.coverage
