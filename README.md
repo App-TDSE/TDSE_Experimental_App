@@ -72,7 +72,7 @@ Handles creation and retrieval of posts. A post belongs to an authenticated user
 
 ### **Stream**
 The stream is served by `StreamController`, which queries posts ordered by `created_at DESC` and returns them as the global public feed. It uses the same `PostRepository` as the Posts module — there is no separate data layer. `GET /api/stream` is public and requires no token.
-> [!IMPORTANT]
+> [!NOTE]
 > **Why keep it separate from `GET /api/posts`?** In the microservices phase, the Stream Service becomes its own Lambda with an independent scaling profile. Having a dedicated endpoint now makes that extraction clean without any API contract changes. The spec also lists it as a required endpoint.
 
 ## **Security Architecture (Auth0)**
@@ -134,7 +134,7 @@ To test protected endpoints: click Authorize in Swagger UI and paste a valid JWT
 ## **Test Report**
 A shell script is provided at `tests/test_api.sh` that runs the full test suite automatically — no manual curl commands needed. It checks public endpoints, JWT validation, protected endpoint access, and the 140-character business rule. If Auth0 M2M credentials are configured, it also fetches a real token and runs the authenticated tests end-to-end.
 
-> [!WARNING]
+> [!CAUTION]
 > Windows users: use Git Bash with jq installed, WSL, or run the script inside a Docker container with Linux. The script is Linux based so it won't work in the regular cmd.
 
 ### **Running the tests**
@@ -197,3 +197,9 @@ Run the script with no configuration at all. Tests 1–3 (public endpoints and i
 ![PublicEndpointsTest.png](images/PublicEndpointsTest.png)
 ![ProtectedEnpointsTest.png](images/ProtectedEnpointsTest.png)
 ![ProtectedEndpointesTest2.png](images/ProtectedEndpointesTest2.png)
+---
+> [!IMPORTANT]
+> # **Evolution: Monolith to Microservices**
+The monolith is structured so that decomposition requires no logic rewrites. Each module already owns its controller, service, and repository. Extracting to Lambda means packaging each module as a standalone handler and replacing in-process calls with HTTP or event-driven communication (SNS/SQS).
+ 
+In the microservices phase, the React frontend on S3 points to AWS API Gateway instead of the Spring Boot server. API Gateway routes `/api/users/*`, `/api/posts/*`, and `/api/stream/*` to their respective Lambda functions. JWT validation moves to a Lambda Authorizer at the Gateway level using the same Auth0 RS256/JWKS mechanism — no changes to the token format or Auth0 configuration are needed.
