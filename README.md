@@ -156,3 +156,40 @@ Run the script with no configuration at all. Tests 1–3 (public endpoints and i
 ```bash
 ./test_api.sh
 ```
+
+### **What the script tests**
+#### **1. Public Endpoints**
+| Test | Expected |
+|------|----------|
+| `GET /api/posts` — no token | 200 OK, JSON list |
+| `GET /api/stream` — no token | 200 OK |
+
+#### **2. Protected Endpoints - No Token**
+| Test | Expected |
+|------|----------|
+| `GET /api/me` — no token | 401 Unauthorized |
+| `POST /api/posts` — no token | 401 Unauthorized |
+
+#### **3. Invalid Token Handling**
+| Test | Expected |
+|------|----------|
+| Random garbage string as Bearer token | 401 Unauthorized |
+| Structurally valid JWT with bad signature | 401 Unauthorized — proves the backend validates signatures, not just structure |
+
+#### **4. Protected Endpoints - Valid Token (requires Auth0 credentials)**
+| Test | Expected |
+|------|----------|
+| `GET /api/me` — valid token | 200 OK, user JSON with `id` field |
+| `POST /api/posts` — valid token | 201 Created, post appears in feed |
+
+#### **5. Business Rules - 140-character limit (requires Auth0 credentials)**
+| Test | Expected |
+|------|----------|
+| Post with 141 characters | 400 Bad Request |
+| Post with exactly 140 characters | 201 Created — confirms the boundary is inclusive |
+| Post with empty content | 400 Bad Request |
+
+### **Obtained Results**
+![PublicEndpointsTest.png](images/PublicEndpointsTest.png)
+![ProtectedEnpointsTest.png](images/ProtectedEnpointsTest.png)
+![ProtectedEndpointesTest2.png](images/ProtectedEndpointesTest2.png)
