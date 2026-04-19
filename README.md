@@ -5,6 +5,41 @@ A simplified Twitter-like application where authenticated users can create short
 
 Juan Pablo Contreras - Juan Carlos Leal - Tomas Ramirez
 
+----
+## **Setup Instructions**
+### **Prerequisites**
+In order to run this project you must have:
+- Java 21, Maven 3.9+
+- Docker + Docker Compose
+- Node.js 20+
+- Auth0 account with a SPA application and an API configured with audience `https://tdseapp.api`
+### **Backend**
+```bash
+git clone https://github.com/App-TDSE/TDSE_Experimental_App
+cd TDSE_Experimental_App/backend
+ 
+cp .env.example .env
+# Fill in AUTH0_DOMAIN, AUTH0_AUDIENCE, DB credentials
+ 
+docker compose up -d --build
+./mvnw spring-boot:run
+```
+Backend runs at `http://localhost:8080`.
+### **Frontend**
+```bash
+cd TDSE_Experimental_App/frontend
+ 
+npm install
+ 
+cp .env.example .env
+# Fill in VITE_AUTH0_DOMAIN, VITE_AUTH0_CLIENT_ID, VITE_AUTH0_AUDIENCE
+ 
+npm run dev
+```
+Frontend runs at `http://localhost:5173`.
+
+----
+
 ## **Architecture Overview - Monolith**
 The system is a single Spring Boot application deployed as one unit. It exposes a REST API backed by PostgreSQL, secured entirely through Auth0 JWT validation. The React frontend communicates with the API over HTTP, obtaining access tokens from Auth0 before calling any protected endpoint. Auth0 handles all authentication, the backend never sees a password, it only validates tokens.
 
@@ -88,3 +123,36 @@ VITE_API_URL=http://localhost:8080
 | Allowed Callback URLs | `http://localhost:5173` (dev), your S3/CloudFront URL (prod) |
 | Allowed Logout URLs | same as above |
 | Allowed Web Origins | same as above |
+
+## **API Reference**
+- Swagger UI: `http://localhost:8080/swagger-ui.html`  
+- OpenAPI spec: `http://localhost:8080/v3/api-docs`
+
+To test protected endpoints: click Authorize in Swagger UI and paste a valid JWT from Auth0 Dashboard -> APIs -> Test tab.
+
+## **Test Report**
+A shell script is provided at `tests/test_api.sh` that runs the full test suite automatically — no manual curl commands needed. It checks public endpoints, JWT validation, protected endpoint access, and the 140-character business rule. If Auth0 M2M credentials are configured, it also fetches a real token and runs the authenticated tests end-to-end.
+
+### **Running the tests**
+To run the test you must start the application, so you must follow the indications given in the Setup Instructions section.
+#### **Option A - With automated token acquisition (recommended)**
+Create an M2M application in Auth0 Dashboard (Applications -> Create -> Machine to Machine), authorize it against your API, then:
+```bash
+cd tests
+cp .env.test.example .env.test
+# Fill in AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET, AUTH0_AUDIENCE
+chmod +x test_api.sh
+./test_api.sh
+```
+
+#### **Option B - With a manually provided token**
+Grab a token from Auth0 Dashboard -> APIs -> your API -> Test tab, then:
+```bash
+./test_api.sh --token eyJhbGci...
+```
+
+#### **Option C - Public tests only**
+Run the script with no configuration at all. Tests 1–3 (public endpoints and invalid token handling) run without any Auth0 credentials. Tests 4–5 are skipped and reported as such.
+```bash
+./test_api.sh
+```
