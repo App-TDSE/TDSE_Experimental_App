@@ -136,6 +136,7 @@ A shell script is provided at `tests/test_api.sh` that runs the full test suite 
 
 > [!CAUTION]
 > Windows users: use Git Bash with jq installed, WSL, or run the script inside a Docker container with Linux. The script is Linux based so it won't work in the regular cmd.
+> If you don't want to do anything of the previous use the `test_api.ps1` file suitable for Windows and follow the comments in the running section.
 
 ### **Running the tests**
 To run the test you must start the application, so you must follow the indications given in the Setup Instructions section.
@@ -147,18 +148,24 @@ cp .env.test.example .env.test
 # Fill in AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET, AUTH0_AUDIENCE
 chmod +x test_api.sh
 ./test_api.sh
+
+# powershell -ExecutionPolicy Bypass -File .\test_api.ps1       FOR WINDOWS
 ```
 
 #### **Option B - With a manually provided token**
 Grab a token from Auth0 Dashboard -> APIs -> your API -> Test tab, then:
 ```bash
 ./test_api.sh --token eyJhbGci...
+
+# powershell -ExecutionPolicy Bypass -File .\test_api.ps1 -Token "eyJhbGci..."        FOR WINDOWS
 ```
 
 #### **Option C - Public tests only**
 Run the script with no configuration at all. Tests 1–3 (public endpoints and invalid token handling) run without any Auth0 credentials. Tests 4–5 are skipped and reported as such.
 ```bash
 ./test_api.sh
+
+# powershell -ExecutionPolicy Bypass -File .\test_api.ps1       FOR WINDOWS
 ```
 
 ### **What the script tests**
