@@ -72,6 +72,7 @@ Handles creation and retrieval of posts. A post belongs to an authenticated user
 
 ### **Stream**
 The stream is served by `StreamController`, which queries posts ordered by `created_at DESC` and returns them as the global public feed. It uses the same `PostRepository` as the Posts module — there is no separate data layer. `GET /api/stream` is public and requires no token.
+> [!IMPORTANT]
 > **Why keep it separate from `GET /api/posts`?** In the microservices phase, the Stream Service becomes its own Lambda with an independent scaling profile. Having a dedicated endpoint now makes that extraction clean without any API contract changes. The spec also lists it as a required endpoint.
 
 ## **Security Architecture (Auth0)**
@@ -132,6 +133,9 @@ To test protected endpoints: click Authorize in Swagger UI and paste a valid JWT
 
 ## **Test Report**
 A shell script is provided at `tests/test_api.sh` that runs the full test suite automatically — no manual curl commands needed. It checks public endpoints, JWT validation, protected endpoint access, and the 140-character business rule. If Auth0 M2M credentials are configured, it also fetches a real token and runs the authenticated tests end-to-end.
+
+> [!WARNING]
+> Windows users: use Git Bash with jq installed, WSL, or run the script inside a Docker container with Linux. The script is Linux based so it won't work in the regular cmd.
 
 ### **Running the tests**
 To run the test you must start the application, so you must follow the indications given in the Setup Instructions section.
