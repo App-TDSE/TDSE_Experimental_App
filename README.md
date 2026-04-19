@@ -41,9 +41,7 @@ The stream is served by `StreamController`, which queries posts ordered by `crea
 
 ## **Security Architecture (Auth0)**
 Auth0 is the sole Identity Provider. The backend never issues tokens, it only validates them. Every protected request goes through the same chain: extract Bearer token -> fetch public key from Auth0's JWKS endpoint -> validate RS256 signature -> validate audience and expiry -> map claims to Spring authorities.
-
 ### **Auth0 Configuration**
-
 | Setting | Value |
 |---------|-------|
 | Tenant | `dev-wbpt56q04xs2migc.us.auth0.com` |
@@ -53,7 +51,6 @@ Auth0 is the sole Identity Provider. The backend never issues tokens, it only va
 | JWKS endpoint | `https://{tenant}/.well-known/jwks.json` |
 
 ### **Endpoint Access Matrix**
-
 | Endpoint | Method | Auth Required | Required Scope |
 |----------|--------|------|----------------|
 | `/api/posts` | GET | No | — |
@@ -62,9 +59,32 @@ Auth0 is the sole Identity Provider. The backend never issues tokens, it only va
 | `/api/me` | GET | Yes | `read:profile` |
 
 ### Scopes
-
 | Scope | Meaning |
 |-------|---------|
 | `read:posts` | Read posts and stream |
 | `write:posts` | Create new posts |
 | `read:profile` | Access own user profile |
+
+## **Frontend Overview**
+Built with React + Vite using `@auth0/auth0-react`. The SDK handles token lifecycle, silent refresh, and in-memory storage, meaning that the app never manually manages the access token.
+
+| File | Purpose |
+|------|---------|
+| `main.jsx` | Wraps the app in `Auth0Provider` with `domain`, `clientId`, `audience`, and `scope` |
+| `App.jsx` | Login/logout, user profile display, post creation, global feed |
+| `.env.example` | Documents required environment variables |
+
+### **Required .env Variables**
+```env
+VITE_AUTH0_DOMAIN=your-tenant.us.auth0.com
+VITE_AUTH0_CLIENT_ID=your-spa-client-id
+VITE_AUTH0_AUDIENCE=https://yourapi.api
+VITE_API_URL=http://localhost:8080
+```
+
+### **Auth0 SPA settings required:**
+| Setting | Value |
+|---------|-------|
+| Allowed Callback URLs | `http://localhost:5173` (dev), your S3/CloudFront URL (prod) |
+| Allowed Logout URLs | same as above |
+| Allowed Web Origins | same as above |
