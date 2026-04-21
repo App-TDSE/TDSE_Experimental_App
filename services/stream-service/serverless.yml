@@ -5,19 +5,19 @@ frameworkVersion: '4'
 provider:
   name: aws
   runtime: java21
-  region: us-east-1
+  region: ${env:AWS_REGION, 'us-east-1'}
   role: arn:aws:iam::973603710939:role/LabRole
   environment:
-    AUTH0_DOMAIN: ${env:AUTH0_DOMAIN, 'dev-osmyby26lkp0anye.us.auth0.com'}
-    AUTH0_AUDIENCE: ${env:AUTH0_AUDIENCE, 'https://tdseapp.api'}
-    AUTH0_CLIENT_ID: ${env:AUTH0_CLIENT_ID, 'dummy-client-id'}
-    CORS_ALLOWED_ORIGINS: '*'
-    POSTS_SERVICE_URL: ${env:POSTS_SERVICE_URL, 'http://localhost:8081'}
+    AUTH0_DOMAIN: ${env:AUTH0_DOMAIN}
+    AUTH0_AUDIENCE: ${env:AUTH0_AUDIENCE}
+    AUTH0_CLIENT_ID: ${env:AUTH0_CLIENT_ID}
+    CORS_ALLOWED_ORIGINS: ${env:CORS_ALLOWED_ORIGINS}
+    POSTS_SERVICE_URL: ${env:POSTS_SERVICE_URL}
 
 
 
 package:
-  artifact: target/stream-service.jar
+  artifact: target/stream-service-1.0.0.jar
 
 functions:
   streamService:
@@ -51,4 +51,5 @@ functions:
               - X-Amz-Security-Token
               - X-Amz-User-Agent
             allowCredentials: false
+
 

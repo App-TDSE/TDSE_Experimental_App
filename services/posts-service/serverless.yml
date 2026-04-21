@@ -6,6 +6,7 @@ provider:
   name: aws
   runtime: java21
   region: ${env:AWS_REGION, 'us-east-1'}
+  role: arn:aws:iam::973603710939:role/LabRole
   environment:
     AUTH0_DOMAIN: ${env:AUTH0_DOMAIN}
     AUTH0_AUDIENCE: ${env:AUTH0_AUDIENCE}
@@ -15,24 +16,15 @@ provider:
     SPRING_DATASOURCE_USERNAME: ${env:SPRING_DATASOURCE_USERNAME}
     SPRING_DATASOURCE_PASSWORD: ${env:SPRING_DATASOURCE_PASSWORD}
     USER_SERVICE_URL: ${env:USER_SERVICE_URL}
-  iam:
-    role:
-      statements:
-        - Effect: Allow
-          Action:
-            - logs:CreateLogGroup
-            - logs:CreateLogStream
-            - logs:PutLogEvents
-          Resource: '*'
 
 package:
-  artifact: target/posts-service.jar
+  artifact: target/posts-service-1.0.0.jar
 
 functions:
   postsService:
     handler: org.eci.TdseApp.posts.PostsServiceLambdaHandler
     memorySize: 1024
-    timeout: 30
+    timeout: 29
     events:
       - http:
           path: /{proxy+}
@@ -41,5 +33,3 @@ functions:
           path: /
           method: ANY
 
-plugins:
-  - serverless-java-plugin

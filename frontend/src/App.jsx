@@ -1,8 +1,16 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { useState, useEffect, useCallback } from "react";
 
-const API = import.meta.env.VITE_API_URL || "http://localhost:8080";
+const API_BASE = import.meta.env.VITE_API_BASE || "";
+const USERS_API_BASE = import.meta.env.VITE_USERS_API_BASE || API_BASE;
+const POSTS_API_BASE = import.meta.env.VITE_POSTS_API_BASE || API_BASE;
+const STREAM_API_BASE = import.meta.env.VITE_STREAM_API_BASE || API_BASE;
 const MAX_CHARS = 140;
+
+function buildApiUrl(base, path) {
+  const normalizedBase = base.replace(/\/$/, "");
+  return `${normalizedBase}${path}`;
+}
 
 function timeAgo(iso) {
   const seconds = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
@@ -62,7 +70,7 @@ export default function App() {
     try {
       setFeedLoading(true);
       setError(null);
-      const res = await fetch(`${API}/api/stream`);
+      const res = await fetch(buildApiUrl(STREAM_API_BASE, "/api/stream"));
       if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
       setPosts(await res.json());
     } catch {
@@ -81,7 +89,7 @@ export default function App() {
   (async () => {
     try {
       const token = await getAccessTokenSilently();
-      await fetch(`${API}/api/me`, {
+      await fetch(buildApiUrl(USERS_API_BASE, "/api/users/me"), {
         headers: { Authorization: `Bearer ${token}` },
       });
     } catch (e) {
@@ -97,7 +105,7 @@ export default function App() {
       setPosting(true);
       setError(null);
       const token = await getAccessTokenSilently();
-      const res = await fetch(`${API}/api/posts`, {
+      const res = await fetch(buildApiUrl(POSTS_API_BASE, "/api/posts"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -123,7 +131,7 @@ export default function App() {
       setDeleting(true);
       setError(null);
       const token = await getAccessTokenSilently();
-      const res = await fetch(`${API}/api/posts/${postId}`, {
+      const res = await fetch(buildApiUrl(POSTS_API_BASE, `/api/posts/${postId}`), {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
