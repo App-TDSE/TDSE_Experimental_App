@@ -1,39 +1,30 @@
 package org.eci.TdseApp.stream;
 
+import com.amazonaws.serverless.exceptions.ContainerInitializationException;
+import com.amazonaws.serverless.proxy.model.AwsProxyRequest;
+import com.amazonaws.serverless.proxy.model.AwsProxyResponse;
+import com.amazonaws.serverless.proxy.spring.SpringBootLambdaContainerHandler;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
-import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ConfigurableApplicationContext;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Lambda handler for Stream Service.
- * When deployed to Lambda with container image, API Gateway routes requests to this handler.
- * The handler delegates to Spring Boot application context.
+ * Bridges AWS API Gateway requests to the Spring Boot application using aws-serverless-java-container.
  */
-public class StreamServiceLambdaHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
-
-    private static ConfigurableApplicationContext applicationContext;
+public class StreamServiceLambdaHandler implements RequestHandler<AwsProxyRequest, AwsProxyResponse> {
+    private static SpringBootLambdaContainerHandler<AwsProxyRequest, AwsProxyResponse> handler;
 
     static {
-        applicationContext = SpringApplication.run(StreamServiceApplication.class);
+        try {
+            handler = SpringBootLambdaContainerHandler.getAwsProxyHandler(StreamServiceApplication.class);
+        } catch (ContainerInitializationException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Could not initialize Spring Boot application", e);
+        }
     }
 
     @Override
-    public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent event, Context context) {
-        context.getLogger().log("Stream Service Lambda Handler - Request path: " + event.getPath());
-
-        APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
-        response.setStatusCode(200);
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Content-Type", "application/json");
-        response.setHeaders(headers);
-        response.setBody("{\"message\":\"Stream Service is running\"}");
-        return response;
+    public AwsProxyResponse handleRequest(AwsProxyRequest awsProxyRequest, Context context) {
+        return handler.proxy(awsProxyRequest, context);
     }
 }
-
