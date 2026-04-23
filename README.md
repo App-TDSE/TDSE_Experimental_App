@@ -6,7 +6,7 @@
 
 ---
 
-## 📋 Tabla de Contenido
+## Tabla de Contenido
 
 1. [Descripción del Proyecto](#descripción-del-proyecto)
 2. [Arquitectura](#arquitectura)
@@ -79,9 +79,9 @@ La API sigue principios REST y define los siguientes endpoints:
 
 | Método | Endpoint | Autenticación | Descripción |
 |--------|----------|--------------|-------------|
-| `GET` | `/api/stream` | ❌ Pública | Retorna todos los posts del feed global |
-| `POST` | `/api/posts` | ✅ JWT requerido | Crea un nuevo post (máx 140 caracteres) |
-| `GET` | `/api/me` | ✅ JWT requerido | Retorna información del usuario autenticado |
+| `GET` | `/api/stream` | Publica | Retorna todos los posts del feed global |
+| `POST` | `/api/posts` | JWT requerido | Crea un nuevo post (máx 140 caracteres) |
+| `GET` | `/api/me` | JWT requerido | Retorna información del usuario autenticado |
 
 **Reglas de negocio:**
 - El contenido de un post no puede exceder 140 caracteres (`400 Bad Request` si se supera).
@@ -123,11 +123,11 @@ El frontend es una **Single Page Application (SPA)** desarrollada en **React + V
 
 ### Funcionalidades
 
-- ✅ **Login / Logout** con Auth0 (redirect flow)
-- ✅ **Ver el feed global** de posts (público, sin autenticación)
-- ✅ **Crear nuevos posts** (requiere estar autenticado)
-- ✅ **Gestión automática de tokens** (silent refresh, token seguro en memoria)
-- ✅ Muestra el nombre del usuario autenticado (`nickname` claim de Auth0)
+- **Login / Logout** con Auth0 (redirect flow)
+- **Ver el feed global** de posts (público, sin autenticación)
+- **Crear nuevos posts** (requiere estar autenticado)
+- **Gestión automática de tokens** (silent refresh, token seguro en memoria)
+- Muestra el nombre del usuario autenticado (`nickname` claim de Auth0)
 
 ### Despliegue en Amazon S3
 
@@ -180,9 +180,9 @@ Usuario → Frontend (React) → Auth0 (Login)
 
 | Endpoint | Protección | Descripción |
 |----------|-----------|-------------|
-| `GET /api/stream` | 🔓 Público | Cualquier usuario puede leer el feed |
-| `POST /api/posts` | 🔒 JWT required | Solo usuarios autenticados crean posts |
-| `GET /api/me` | 🔒 JWT required | Retorna info del usuario autenticado |
+| `GET /api/stream` | Publico | Cualquier usuario puede leer el feed |
+| `POST /api/posts` | JWT required | Solo usuarios autenticados crean posts |
+| `GET /api/me` | JWT required | Retorna info del usuario autenticado |
 
 **En el Monolito (Spring Boot):**
 ```java
@@ -257,10 +257,10 @@ Se utiliza DynamoDB como base de datos NoSQL serverless.
 
 El despliegue se realiza en un **solo comando** (`sls deploy`) desde la carpeta `services/`. El Serverless Framework aprovisiona automáticamente:
 
-1. ✅ Tabla **DynamoDB** (`twitter-posts-table-dev`)
-2. ✅ Tres funciones **Lambda** (`getStream`, `createPost`, `getUser`)
-3. ✅ **HTTP API Gateway** con autorizador JWT de Auth0
-4. ✅ **IAM Roles** con permisos mínimos por función
+1. Tabla **DynamoDB** (`twitter-posts-table-dev`)
+2. Tres funciones **Lambda** (`getStream`, `createPost`, `getUser`)
+3. **HTTP API Gateway** con autorizador JWT de Auth0
+4. **IAM Roles** con permisos mínimos por función
 
 ```bash
 cd services
@@ -343,7 +343,7 @@ mvn spring-boot:run
 # Swagger UI disponible en: http://localhost:8080/swagger-ui/index.html
 ```
 
-> ⚠️ El monolito requiere una base de datos PostgreSQL. Consulta `backend/src/main/resources/application.properties` para la configuración de conexión.
+> **Nota:** El monolito requiere una base de datos PostgreSQL. Consulta `backend/src/main/resources/application.properties` para la configuración de conexión.
 
 ---
 
@@ -355,13 +355,13 @@ Se realizaron pruebas exhaustivas de todos los endpoints, verificando el correct
 
 | # | Prueba | Endpoint | Resultado Esperado | Resultado |
 |---|--------|----------|--------------------|-----------|
-| 1 | Feed público sin token | `GET /api/stream` | `200 OK` | ✅ Correcto |
-| 2 | Crear post sin token | `POST /api/posts` | `401 Unauthorized` | ✅ Correcto |
-| 3 | Info usuario sin token | `GET /api/me` | `401 Unauthorized` | ✅ Correcto |
-| 4 | Post > 140 caracteres | `POST /api/posts` | `400 Bad Request` | ✅ Correcto |
-| 5 | Login con Google via Auth0 | Auth0 flow | JWT válido, `authorId` en DynamoDB | ✅ Correcto |
-| 6 | Crear post con JWT válido | `POST /api/posts` | `201 Created` | ✅ Correcto |
-| 7 | Endpoint protegido con JWT | `GET /api/me` | `200 OK` con datos del usuario | ✅ Correcto |
+| 1 | Feed público sin token | `GET /api/stream` | `200 OK` | Correcto |
+| 2 | Crear post sin token | `POST /api/posts` | `401 Unauthorized` | Correcto |
+| 3 | Info usuario sin token | `GET /api/me` | `401 Unauthorized` | Correcto |
+| 4 | Post > 140 caracteres | `POST /api/posts` | `400 Bad Request` | Correcto |
+| 5 | Login con Google via Auth0 | Auth0 flow | JWT válido, `authorId` en DynamoDB | Correcto |
+| 6 | Crear post con JWT válido | `POST /api/posts` | `201 Created` | Correcto |
+| 7 | Endpoint protegido con JWT | `GET /api/me` | `200 OK` con datos del usuario | Correcto |
 
 ### Evidencia de Pruebas — Endpoints Públicos
 
@@ -390,10 +390,10 @@ Se realizaron pruebas exhaustivas de todos los endpoints, verificando el correct
 
 ## Links
 
-- 🌐 **App en AWS S3:** [https://twitter-frontend-tomas-20260421.s3.amazonaws.com/index.html](https://twitter-frontend-tomas-20260421.s3.amazonaws.com/index.html)
-- 📹 **Video Demostración:** `[PEGAR LINK DEL VIDEO AQUI]`
-- 📦 **Repositorio GitHub:** [https://github.com/App-TDSE/TDSE_Experimental_App](https://github.com/App-TDSE/TDSE_Experimental_App)
+- **App en AWS S3:** [https://twitter-frontend-tomas-20260421.s3.amazonaws.com/index.html](https://twitter-frontend-tomas-20260421.s3.amazonaws.com/index.html)
+- **Video Demostracion:** `[PEGAR LINK DEL VIDEO AQUI]`
+- **Repositorio GitHub:** [https://github.com/App-TDSE/TDSE_Experimental_App](https://github.com/App-TDSE/TDSE_Experimental_App)
 
 ---
 
-> ⚠️ **Nota de Seguridad:** No se han commiteado credenciales, secrets de Auth0 ni API keys al repositorio. Se utilizan variables de entorno locales y AWS Secrets/environment variables en Lambda para manejar información sensible.
+> **Nota de Seguridad:** No se han commiteado credenciales, secrets de Auth0 ni API keys al repositorio. Se utilizan variables de entorno locales y AWS Secrets/environment variables en Lambda para manejar información sensible.
