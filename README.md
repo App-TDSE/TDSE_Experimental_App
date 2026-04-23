@@ -260,7 +260,7 @@ El despliegue se realiza en un **solo comando** (`sls deploy`) desde la carpeta 
 1. Tabla **DynamoDB** (`twitter-posts-table-dev`)
 2. Tres funciones **Lambda** (`getStream`, `createPost`, `getUser`)
 3. **HTTP API Gateway** con autorizador JWT de Auth0
-4. **IAM Roles** con permisos mínimos por función
+4. **AWS Roles** con permisos mínimos por función
 
 ```bash
 cd services
@@ -391,9 +391,8 @@ Se realizaron pruebas exhaustivas de todos los endpoints, verificando el correct
 ## Links
 
 - **App en AWS S3:** [https://twitter-frontend-tomas-20260421.s3.amazonaws.com/index.html](https://twitter-frontend-tomas-20260421.s3.amazonaws.com/index.html)
-- **Video Demostracion:** `[PEGAR LINK DEL VIDEO AQUI]`
+- **Video Demostracion:** [https://youtu.be/vR0v466-T7U](https://youtu.be/vR0v466-T7U)
 - **Repositorio GitHub:** [https://github.com/App-TDSE/TDSE_Experimental_App](https://github.com/App-TDSE/TDSE_Experimental_App)
 
 ---
 
-> **Nota de Seguridad:** No se han commiteado credenciales, secrets de Auth0 ni API keys al repositorio. Se utilizan variables de entorno locales y AWS Secrets/environment variables en Lambda para manejar información sensible.
