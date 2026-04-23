@@ -1,36 +1,19 @@
-HELP.md
-target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+# AWS credentials and sensitive files - DO NOT COMMIT
+.aws/
+*.credentials
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
-.vscode/
-
+# Environment files
 .env
-.DS_Store
+.env.*
+
+# Node
+node_modules/
+
+# Java
+backend/target/
+
+# Serverless
+services/.serverless/
+
+# Frontend build
+frontend/dist/

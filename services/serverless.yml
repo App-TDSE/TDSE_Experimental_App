@@ -1,0 +1,61 @@
+service: twitter-microservices
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+  environment:
+    POSTS_TABLE: ${self:custom.tableName}
+  httpApi:
+    cors: true
+    authorizers:
+      auth0Authorizer:
+        identitySource: $request.header.Authorization
+        issuerUrl: https://dev-osmyby26lkp0anye.us.auth0.com/
+        audience:
+          - https://twitter
+  role: arn:aws:iam::973603710939:role/LabRole
+
+custom:
+  tableName: 'twitter-posts-table-${sls:stage}'
+
+functions:
+  getStream:
+    handler: handler.getStream
+    events:
+      - httpApi:
+          path: /api/stream
+          method: get
+
+  createPost:
+    handler: handler.createPost
+    events:
+      - httpApi:
+          path: /api/posts
+          method: post
+          authorizer:
+            name: auth0Authorizer
+
+  getUser:
+    handler: handler.getUser
+    events:
+      - httpApi:
+          path: /api/me
+          method: get
+          authorizer:
+            name: auth0Authorizer
+
+
+resources:
+  Resources:
+    PostsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:custom.tableName}
