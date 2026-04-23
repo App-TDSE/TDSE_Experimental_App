@@ -20,15 +20,19 @@ custom:
   tableName: 'twitter-posts-table-${sls:stage}'
 
 functions:
+  # Stream Service — public endpoint, no auth required
   getStream:
-    handler: handler.getStream
+    handler: handlers/getStream.getStream
+    description: "Stream Service: returns the global public feed of all posts"
     events:
       - httpApi:
           path: /api/stream
           method: get
 
+  # Posts Service — protected, JWT required
   createPost:
-    handler: handler.createPost
+    handler: handlers/createPost.createPost
+    description: "Posts Service: creates a new post (max 140 chars) for the authenticated user"
     events:
       - httpApi:
           path: /api/posts
@@ -36,8 +40,10 @@ functions:
           authorizer:
             name: auth0Authorizer
 
+  # User Service — protected, JWT required
   getUser:
-    handler: handler.getUser
+    handler: handlers/getUser.getUser
+    description: "User Service: returns the authenticated user's Auth0 JWT claims"
     events:
       - httpApi:
           path: /api/me

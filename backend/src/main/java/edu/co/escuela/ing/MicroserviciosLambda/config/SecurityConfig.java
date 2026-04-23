@@ -29,9 +29,11 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin())) // needed for H2 console
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/api/stream").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                .requestMatchers("/h2-console/**").permitAll()  // H2 dev console
                 .requestMatchers("/api/posts").authenticated()
                 .requestMatchers("/api/me").authenticated()
                 .anyRequest().authenticated()
