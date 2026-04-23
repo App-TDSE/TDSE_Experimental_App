@@ -391,8 +391,7 @@ Se realizaron pruebas exhaustivas de todos los endpoints, verificando el correct
 ## Links
 
 - **App en AWS S3:** [https://twitter-frontend-tomas-20260421.s3.amazonaws.com/index.html](https://twitter-frontend-tomas-20260421.s3.amazonaws.com/index.html)
-- **Video Demostracion:** [https://youtu.be/vR0v466-T7U](https://youtu.be/vR0v466-T7U)
-- **Repositorio GitHub:** [https://github.com/App-TDSE/TDSE_Experimental_App](https://github.com/App-TDSE/TDSE_Experimental_App)
+- **Video Demostracion:** [https://youtu.be/voL55Ggxxv8?si=tgxJLzhFFMt_tOgR](https://youtu.be/voL55Ggxxv8?si=tgxJLzhFFMt_tOgR)
 
 ---
 
